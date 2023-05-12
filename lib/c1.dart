@@ -66,8 +66,8 @@ class _C1State extends State<C1> {
                 itemBuilder: (context, index) {
                   final bitacora = _bitacoras[index];
                   return ListTile(
-                    title: Text(bitacora['placa']),
-                    subtitle: Text(bitacora['verifico']),
+                    title: Text(bitacora['fecha']),
+                    subtitle: Text(bitacora['evento']),
                   );
                 },
               ),

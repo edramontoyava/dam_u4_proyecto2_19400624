@@ -66,7 +66,7 @@ class _C2State extends State<C2> {
                 itemBuilder: (context, index) {
                   final bitacora = _bitacoras[index];
                   return ListTile(
-                    title: Text(bitacora['placa']),
+                    title: Text(bitacora['fecha']),
                     subtitle: Text(bitacora['evento']),
                   );
                 },
