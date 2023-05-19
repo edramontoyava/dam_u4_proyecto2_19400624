@@ -1,5 +1,3 @@
-import 'package:dam_u4_proyecto1_19400624/auto_Add.dart';
-import 'package:dam_u4_proyecto1_19400624/auto_update.dart';
 import 'package:dam_u4_proyecto1_19400624/firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -18,14 +16,14 @@ class _HomeState extends State<Home> {
         appBar: AppBar(
           title: Row(
               children: [
-                Text('VEHICULOS'),
+                Text('Asignacion'),
                 SizedBox(width: 10,),
-                Icon(Icons.car_rental_rounded)
+                Icon(Icons.school)
               ]
           )
         ),
         body: FutureBuilder(
-            future: getAuto(),
+            future: getasig(),
             builder: ((context, snapshot) {
               if (snapshot.hasData) {
                 return ListView.builder(
@@ -33,39 +31,24 @@ class _HomeState extends State<Home> {
                     itemBuilder: (context, index){
                       return InkWell(
                         child: ListTile(
-                          leading: Text(snapshot.data?[index]['combustible'] +
-                              '\n' +
-                              snapshot.data?[index]['tanque'] +
-                              ' lt'),
-                          title: Text(snapshot.data?[index]['tipo'] +
-                              ' (' +
-                              snapshot.data?[index]['placa'] +
-                              '=>' +
-                              snapshot.data?[index]['numeroserie'] +
-                              ')'),
-                          subtitle: Text(snapshot.data?[index]['trabajador'] +
-                              ' (' +
-                              snapshot.data?[index]['depto'] +
-                              ')'),
-                          trailing:
-                              Text(snapshot.data?[index]['resguardadopor']),
+                          leading:Text(snapshot.data?[index]['edificio']+'\n'+'('+snapshot.data?[index]['salon']+')'),
+                          title:Text(snapshot.data?[index]['docente']),
+                          subtitle:Text(snapshot.data?[index]['materia']),
+                          trailing:Text(snapshot.data?[index]['horario']),
                           onTap: ()async{
                             await Navigator.pushNamed(context, '/edit',
                                 arguments: {
-                              "uid":snapshot.data?[index]['uid'],
-                                  "placa":snapshot.data?[index]['placa'],
-                                  "tipo" :snapshot.data?[index]['tipo'],
-                                  "numeroserie" :snapshot.data?[index]['numeroserie'],
-                                  "depto" :snapshot.data?[index]['depto'],
-                                  "trabajador" :snapshot.data?[index]['trabajador'],
-                                  "resguardadopor" :snapshot.data?[index]['resguardadopor'],
-                                  "combustible" :snapshot.data?[index]['combustible'],
-                                  "tanque" :snapshot.data?[index]['tanque']
+                                  "uid":snapshot.data?[index]['uid'],
+                                  "docente":snapshot.data?[index]['docente'],
+                                  "materia" :snapshot.data?[index]['materia'],
+                                  "horario" :snapshot.data?[index]['horario'],
+                                  "edificio" :snapshot.data?[index]['edificio'],
+                                  "salon" :snapshot.data?[index]['salon'],
                                 });
                             setState(() {});
                           },
                           onLongPress: ()async{
-                            await deleteAuto(snapshot.data?[index]['uid']);
+                            await deleteasig(snapshot.data?[index]['uid']);
                             setState(() {});
                           },
                         ),
@@ -89,16 +72,9 @@ class _HomeState extends State<Home> {
               SizedBox(width: 18),
               FloatingActionButton(
                 onPressed: () async {
-                  await Navigator.pushNamed(context, '/Bit');
+                  await Navigator.pushNamed(context, '/asis');
                   setState(() {});
                 }, child: Icon(Icons.library_books),
-              ),
-              SizedBox(width: 18),
-              FloatingActionButton(
-                onPressed: () async {
-                  await Navigator.pushNamed(context, '/C4');
-                  setState(() {});
-                }, child: Icon(Icons.question_mark),
               ),
             ]
         )

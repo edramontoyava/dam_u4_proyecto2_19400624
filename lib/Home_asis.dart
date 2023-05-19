@@ -1,28 +1,28 @@
 import 'package:dam_u4_proyecto1_19400624/firestore.dart';
 import 'package:flutter/material.dart';
 
-class Home_Bit extends StatefulWidget {
-  const Home_Bit({Key? key}) : super(key: key);
+class Home_Asis extends StatefulWidget {
+  const Home_Asis({Key? key}) : super(key: key);
 
   @override
-  State<Home_Bit> createState() => _Home_BitState();
+  State<Home_Asis> createState() => _Home_AsisState();
 }
 
-class _Home_BitState extends State<Home_Bit> {
+class _Home_AsisState extends State<Home_Asis> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title:Row(
             children: [
-              Text('BITACORAS'),
+              Text('ASISTENCIA'),
               SizedBox(width: 10,),
               Icon(Icons.library_books_rounded)
             ],
           ),
         ),
         body: FutureBuilder(
-            future: getBit(),
+            future: getasis(),
             builder: ((context, snapshot) {
               if (snapshot.hasData) {
                 return ListView.builder(
@@ -30,23 +30,9 @@ class _Home_BitState extends State<Home_Bit> {
                     itemBuilder: (context, index){
                       return InkWell(
                         child: ListTile(
-                          leading: Text(snapshot.data?[index]['fecha'] +'\n'+ snapshot.data?[index]['evento']),
-                          title: Text(snapshot.data?[index]['placa']),
-                          subtitle: Text(snapshot.data?[index]['verifico']+'('+snapshot.data?[index]['recursos']+')'),
-                          trailing: Text(snapshot.data?[index]['fechaverificacion']),
-                          onTap: ()async{
-                            await Navigator.pushNamed(context, '/Bit/edit',
-                                arguments: {
-                                  "uid":snapshot.data?[index]['uid'],
-                                  "placa":snapshot.data?[index]['placa'],
-                                  "evento":snapshot.data?[index]['evento'],
-                                  "fecha":snapshot.data?[index]['fecha'],
-                                  "recursos":snapshot.data?[index]['recursos'],
-                                  "verifico":snapshot.data?[index]['verifico'],
-                                  "fechaverificacion" :snapshot.data?[index]['fechaverificacion'],
-                                });
-                            setState(() {});
-                          },
+                          title: Text(snapshot.data?[index]['docente']),
+                          subtitle: Text(snapshot.data?[index]['fecha/hora']),
+                          trailing: Text(snapshot.data?[index]['revisor']),
                         ),
                       );
                     });
@@ -61,7 +47,7 @@ class _Home_BitState extends State<Home_Bit> {
             children: [
               FloatingActionButton(
                 onPressed: () async {
-                  await Navigator.pushNamed(context, '/Bit/add');
+                  await Navigator.pushNamed(context, '/asis/add');
                   setState(() {});
                 }, child: Icon(Icons.add),
               ),

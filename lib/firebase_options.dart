@@ -44,39 +44,39 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDv-hnhISwGzuyisjqjA1EYSsAk6O5PAPs',
-    appId: '1:782615987908:web:682564e1cd7d483f88ab91',
-    messagingSenderId: '782615987908',
-    projectId: 'proyecto1-45c35',
-    authDomain: 'proyecto1-45c35.firebaseapp.com',
-    storageBucket: 'proyecto1-45c35.appspot.com',
+    apiKey: 'AIzaSyB6wnEswA97uYGuFNQDR1mvulptZP7KqYE',
+    appId: '1:188955831403:web:9eaea8f3eebe446ffcd52e',
+    messagingSenderId: '188955831403',
+    projectId: 'proyecto2-f638e',
+    authDomain: 'proyecto2-f638e.firebaseapp.com',
+    storageBucket: 'proyecto2-f638e.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAsob8Vd_fei43aN0NVmPGDUKb4c1_IQRQ',
-    appId: '1:782615987908:android:fb5e98d13872c14a88ab91',
-    messagingSenderId: '782615987908',
-    projectId: 'proyecto1-45c35',
-    storageBucket: 'proyecto1-45c35.appspot.com',
+    apiKey: 'AIzaSyClvynD2EXLjoTwAKAfjhtNJBg1GRzeL8k',
+    appId: '1:188955831403:android:0633dbc66ab4c83cfcd52e',
+    messagingSenderId: '188955831403',
+    projectId: 'proyecto2-f638e',
+    storageBucket: 'proyecto2-f638e.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCTV1e4L80NOLB0FbPmdFsdEa8IPlwZL5Y',
-    appId: '1:782615987908:ios:0b420d92b11f2d5988ab91',
-    messagingSenderId: '782615987908',
-    projectId: 'proyecto1-45c35',
-    storageBucket: 'proyecto1-45c35.appspot.com',
-    iosClientId: '782615987908-dctjvos65iesslvl5ebv8ml5fshtf2dj.apps.googleusercontent.com',
+    apiKey: 'AIzaSyBU86OTDrOgYWI1DjnEqZoKWm7c6StCyro',
+    appId: '1:188955831403:ios:830cd29b7676d3b6fcd52e',
+    messagingSenderId: '188955831403',
+    projectId: 'proyecto2-f638e',
+    storageBucket: 'proyecto2-f638e.appspot.com',
+    iosClientId: '188955831403-pkemrno0v3l6usl6346va6tqj8uoq423.apps.googleusercontent.com',
     iosBundleId: 'com.example.damU4Proyecto119400624',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCTV1e4L80NOLB0FbPmdFsdEa8IPlwZL5Y',
-    appId: '1:782615987908:ios:0b420d92b11f2d5988ab91',
-    messagingSenderId: '782615987908',
-    projectId: 'proyecto1-45c35',
-    storageBucket: 'proyecto1-45c35.appspot.com',
-    iosClientId: '782615987908-dctjvos65iesslvl5ebv8ml5fshtf2dj.apps.googleusercontent.com',
+    apiKey: 'AIzaSyBU86OTDrOgYWI1DjnEqZoKWm7c6StCyro',
+    appId: '1:188955831403:ios:830cd29b7676d3b6fcd52e',
+    messagingSenderId: '188955831403',
+    projectId: 'proyecto2-f638e',
+    storageBucket: 'proyecto2-f638e.appspot.com',
+    iosClientId: '188955831403-pkemrno0v3l6usl6346va6tqj8uoq423.apps.googleusercontent.com',
     iosBundleId: 'com.example.damU4Proyecto119400624',
   );
 }

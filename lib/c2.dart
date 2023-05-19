@@ -4,73 +4,120 @@ import 'package:intl/intl.dart';
 
 class C2 extends StatefulWidget {
   @override
-  _C2State createState() => _C2State();
+  _C2State createState() =>
+      _C2State();
 }
 
-class _C2State extends State<C2> {
-  final TextEditingController _fechaController = TextEditingController();
-  List<Map<String, dynamic>> _bitacoras = [];
+class _C2State
+    extends State<C2> {
+  TextEditingController _revisorController = TextEditingController();
+  List<Map<String, dynamic>> _asistencias = [];
 
-  void _fetchBitacorasByFecha() async {
-    final String fecha = _fechaController.text.trim();
+  void _buscarAsistencias() async {
+    String revisor = _revisorController.text.trim();
 
-    if (fecha.isEmpty) {
-      return;
+    if (revisor.isNotEmpty) {
+      try {
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('asistencia')
+            .where('revisor', isEqualTo: revisor)
+            .get();
+
+        List<Map<String, dynamic>> asistencias = [];
+
+        for (var doc in querySnapshot.docs) {
+          Map<String, dynamic> data = doc.data()! as Map<String, dynamic>;
+          DateTime fechaHora = (data["fecha/hora"] as Timestamp).toDate();
+          Map<String, dynamic> asistencia = {
+            "uid": doc.id,
+            "docente": data["docente"],
+            "fecha/hora": DateFormat('yyyy-MM-dd HH:mm:ss').format(fechaHora),
+            "revisor": data["revisor"],
+          };
+          asistencias.add(asistencia);
+        }
+
+        setState(() {
+          _asistencias = asistencias;
+        });
+      } catch (e) {
+        print('Error al buscar asistencias: $e');
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Error'),
+            content: Text('Ocurrió un error al buscar asistencias.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Ingrese un revisor.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
-
-    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('bitacora')
-        .where('fecha', isEqualTo: Timestamp.fromDate(DateFormat('yyyy-MM-dd').parse(fecha)))
-        .get();
-
-    setState(() {
-      _bitacoras = querySnapshot.docs
-          .map((doc) => {
-        "uid": doc.id,
-        "placa": doc["placa"],
-        "evento": doc["evento"],
-        "fecha": DateFormat('yyyy-MM-dd').format((doc["fecha"] as Timestamp).toDate()).toString(),
-        "verifico": doc["verifico"],
-        "fechaverificacion": DateFormat('yyyy-MM-dd').format((doc["fechaverificacion"] as Timestamp).toDate()).toString(),
-        "recursos": doc["recursos"],
-      })
-          .toList();
-    });
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bitacoras por fecha'),
+        title: Text('Buscar Asistencias por Revisor'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
-              controller: _fechaController,
+              controller: _revisorController,
               decoration: InputDecoration(
-                labelText: 'Ingrese la fecha (yyyy-MM-dd)',
+                labelText: 'Revisor',
               ),
             ),
             SizedBox(height: 16.0),
             ElevatedButton(
-              onPressed: _fetchBitacorasByFecha,
+              onPressed: _buscarAsistencias,
               child: Text('Buscar'),
             ),
             SizedBox(height: 16.0),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _bitacoras.length,
-                itemBuilder: (context, index) {
-                  final bitacora = _bitacoras[index];
-                  return ListTile(
-                    title: Text(bitacora['fecha']),
-                    subtitle: Text(bitacora['evento']),
-                  );
-                },
+            Text(
+              'Asistencias encontradas:',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
               ),
+            ),
+            SizedBox(height: 8.0),
+            if (_asistencias.isEmpty)
+              Text('No se encontraron asistencias.'),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: _asistencias.length,
+              itemBuilder: (context, index) {
+                Map<String, dynamic> asistencia = _asistencias[index];
+                return ListTile(
+                  title: Text('${asistencia["docente"]}'),
+                  subtitle: Text('${asistencia["fecha/hora"]}'),
+                  trailing:Text('${asistencia["revisor"]}'),
+                );
+              },
             ),
           ],
         ),

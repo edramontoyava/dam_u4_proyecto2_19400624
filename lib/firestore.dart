@@ -1,158 +1,124 @@
-import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/src/widgets/editable_text.dart';
 import 'package:intl/intl.dart';
-
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
-Future<List> getAuto() async {
-  List autos = [];
-  QuerySnapshot querySnapshot = await db.collection('vehiculo').get();
+Future<List> getasig() async {
+  List asignados = [];
+  QuerySnapshot querySnapshot = await db.collection('asignacion').get();
 
   for (var doc in querySnapshot.docs) {
     Map<String, dynamic> data = doc.data()! as Map<String, dynamic>;
-    Map auto = {
+    Map asignado = {
       "uid": doc.id,
-      "placa": data["placa"],
-      "tipo": data["tipo"],
-      "numeroserie": data["numeroserie"],
-      "depto": data["depto"],
-      "trabajador": data["trabajador"],
-      "resguardadopor": data["resguardadopor"],
-      "combustible": data["combustible"],
-      "tanque": data["tanque"].toString(),
+      "docente": data["docente"],
+      "materia": data["materia"],
+      "horario": data["horario"],
+      "edificio": data["edificio"],
+      "salon": data["salon"],
     };
-
-    autos.add(auto);
+    asignados.add(asignado);
   }
-  return autos;
+  return asignados;
 }
 
-Future<List> getBit() async {
-  List Bitacoras = [];
-  QuerySnapshot querySnapshot = await db.collection('bitacora').get();
+Future<List> getasis() async {
+  List asistencias = [];
+  QuerySnapshot querySnapshot = await db.collection('asistencia').get();
 
   for (var doc in querySnapshot.docs) {
     Map<String, dynamic> data = doc.data()! as Map<String, dynamic>;
-    Map bitacora = {
+    Map asistencia = {
       "uid": doc.id,
-      "placa": data["placa"],
-      "evento": data["evento"],
-      "fecha": DateFormat('yyyy-MM-dd').format(data["fecha"].toDate()).toString(),
-      "verifico": data["verifico"],
-      "fechaverificacion": DateFormat('yyyy-MM-dd').format(data["fechaverificacion"].toDate()).toString(),
-      "recursos": data["recursos"],
+      "docente": data["docente"],
+      "fecha/hora": DateFormat('yyyy-MM-dd HH:mm:ss').format(data["fecha/hora"].toDate()).toString(),
+      "revisor": data["revisor"],
     };
-
-    Bitacoras.add(bitacora);
+    asistencias.add(asistencia);
   }
-  return Bitacoras;
+  return asistencias;
 }
 
-Future<void> addAuto(
-    String placa,
-    String tipo,
-    String numeroserie,
-    String depto,
-    String trabajador,
-    String resguardadopor,
-    String combustible,
-    String tanque,
-) async {await db.collection("vehiculo").add(
-      {
-        "placa": placa,
-        "tipo": tipo,
-        "numeroserie": numeroserie,
-        "depto": depto,
-        "trabajador": trabajador,
-        "resguardadopor": resguardadopor,
-        "combustible": combustible,
-        "tanque": int.parse(tanque)
-  });
-}
-
-Future<void> addBit(
-    String placa,
-    String evento,
-    String fecha,
-    String recursos,
-    String verifico,
-    String fechaverificacion,
-    ) async {await db.collection("bitacora").add(
+Future<void> addasig(
+    String docente,
+    String materia,
+    String horario,
+    String edificio,
+    String salon,
+    ) async {await db.collection("asignacion").add(
     {
-      "placa": placa,
-      "evento": evento,
-      "fecha": DateTime.parse(fecha),
-      "recursos": recursos,
-      "verifico": verifico,
-      "fechaverificacion": DateTime.parse(fechaverificacion),
+      "docente": docente,
+      "materia": materia,
+      "horario": horario,
+      "edificio": edificio,
+      "salon": salon,
     });
 }
 
-Future<List<String>> placas() async {
-  List<String> placas = [];
+Future<void> addasis(
+    String docente,
+    String fecha_hora,
+    String revisor,
+    ) async {await db.collection("asistencia").add(
+    {
+      "docente": docente,
+      "fecha/hora": DateTime.parse(fecha_hora),
+      "revisor":revisor,
+    });
+}
 
-  QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance.collection('vehiculo').get();
+
+Future<void> updateasig(
+    String uid,
+    String docente,
+    String materia,
+    String horario,
+    String edificio,
+    String salon,
+    ) async {await db.collection("asignacion").doc(uid).set(
+    {
+      "docente": docente,
+      "materia": materia,
+      "horario": horario,
+      "edificio": edificio,
+      "salon": salon,
+    });
+}
+
+Future<void> deleteasig(String uid,) async {
+  await db.collection("asignacion").doc(uid).delete();
+}
+
+Future<List<String>> docentes() async {
+  List<String> docentes = [];
+
+  QuerySnapshot<Map<String, dynamic>> querySnapshot =
+  await FirebaseFirestore.instance.collection('asignacion').get();
 
   for (var doc in querySnapshot.docs) {
-    if (doc.data().containsKey('placa')) {
-      String valor = doc.data()['placa'] as String;
-      placas.add(valor);
+    if (doc.data().containsKey('docente') && doc.data().containsKey('materia') && doc.data().containsKey('horario')) {
+      String docente = doc.data()['docente'] as String;
+      String materia = doc.data()['materia'] as String;
+      String horario = doc.data()['horario'] as String;
+      String docenteMateria = '$docente : $materia ($horario)';
+      docentes.add(docenteMateria);
     }
   }
 
-  return placas;
+  return docentes;
 }
 
+Future<DocumentSnapshot> getAsistenciaDocente(String docente) async {
+  QuerySnapshot querySnapshot = await db
+      .collection('asistencia')
+      .where('docente', isEqualTo: docente)
+      .get();
 
-Future<void> updateAuto(
-    String uid,
-    String placa,
-    String tipo,
-    String numeroserie,
-    String depto,
-    String trabajador,
-    String resguardadopor,
-    String combustible,
-    String tanque,
-    ) async {await db.collection("vehiculo").doc(uid).set(
-    {
-      "placa": placa,
-      "tipo": tipo,
-      "numeroserie": numeroserie,
-      "depto": depto,
-      "trabajador": trabajador,
-      "resguardadopor": resguardadopor,
-      "combustible": combustible,
-      "tanque": int.parse(tanque)
-    });
-}
-
-Future<void> updateBit(
-    String placa,
-    String evento,
-    DateTime fecha,
-    String recursos,
-    String uid,
-    String verifico,
-    DateTime fechaverificacion,
-    ) async {
-  Timestamp fechaTimestamp = Timestamp.fromDate(fecha);
-  Timestamp fechaverificacionTimestamp = Timestamp.fromDate(fechaverificacion);
-
-  await FirebaseFirestore.instance.collection("bitacora").doc(uid).set({
-    "placa": placa,
-    "evento": evento,
-    "fecha": fechaTimestamp,
-    "recursos": recursos,
-    "verifico": verifico,
-    "fechaverificacion": fechaverificacionTimestamp,
-  });
-}
-
-
-
-Future<void> deleteAuto(String uid,) async {
-  await db.collection("vehiculo").doc(uid).delete();
+  if (querySnapshot.docs.length > 0) {
+    // Se asume que solo hay un documento para el docente especificado
+    return querySnapshot.docs[0];
+  } else {
+    // No se encontró ningún documento para el docente especificado
+    throw Exception('No se encontró asistencia para el docente especificado');
+  }
 }
